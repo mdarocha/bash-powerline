@@ -6,12 +6,12 @@ Powerline for Bash in pure Bash script.
 
 ## Features
 
-* Git branch: show current git branch name, or short SHA1 hash when the head is detached.
-* Git branch: show "+" symbol when current branch is changed but uncommited.
-* Git branch: show "⇡" symbol and number of commits current branch is ahead of remote.
-* Git branch: show "⇣" symbol and number of commits current branch is behind of remote.
+* Git: show branch name, tag name, or unique short hash.
+* Git: show "*" symbol with uncommited modifications.
+* Git: show "↑" symbol and number of commits ahead of remote.
+* Git: show "↓" symbol and number of commits behind remote.
 * Python: display "ƨ" symbol when in a virtual environment
-* Platform-dependent prompt symbol for MacOS and Linux.
+* Platform-dependent prompt symbols.
 * Color-coded prompt symbol according to previous command execution status.
 * Use Bash builtin when possible to reduce delay. Delay sucks!
 * No need for patched fonts.
