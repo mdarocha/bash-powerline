@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
+## Uncomment to disable git info
+#POWERLINE_GIT=0
+
 __powerline() {
+    if ! hash tput 2>/dev/null; then
+        >&2 echo "tput missing, install ncurses to use bash-powerline.sh"
+        return
+    fi
 
     # Unicode symbols
     readonly PS_SYMBOL_DARWIN=''
@@ -106,24 +113,28 @@ __powerline() {
     fi
 
     __git_info() { 
-        [ -x "$(which git)" ] || return    # git not found
+        [[ $POWERLINE_GIT = 0 ]] && return # disabled
+
+        hash git 2>/dev/null || return # git not found
 
         local git_eng="env LANG=C git"   # force git output in English to make our work easier
+
         # get current branch name or short SHA1 hash for detached head
         local branch="$($git_eng symbolic-ref --short HEAD 2>/dev/null || $git_eng describe --tags --always 2>/dev/null)"
         [ -n "$branch" ] || return  # git branch not found
 
         local marks
 
-        # branch is modified?
-        [ -n "$($git_eng status --porcelain)" ] && marks+=" $GIT_BRANCH_CHANGED_SYMBOL"
-
-        # how many commits local branch is ahead/behind of remote?
-        local stat="$($git_eng status --porcelain --branch | grep '^##' | grep -o '\[.\+\]$')"
-        local aheadN="$(echo $stat | grep -o 'ahead [[:digit:]]\+' | grep -o '[[:digit:]]\+')"
-        local behindN="$(echo $stat | grep -o 'behind [[:digit:]]\+' | grep -o '[[:digit:]]\+')"
-        [ -n "$aheadN" ] && marks+=" $GIT_NEED_PUSH_SYMBOL$aheadN"
-        [ -n "$behindN" ] && marks+=" $GIT_NEED_PULL_SYMBOL$behindN"
+        # scan first two lines of output from `git status`
+        while IFS= read -r line; do
+            if [[ $line =~ ^## ]]; then # header line
+                [[ $line =~ ahead\ ([0-9]+) ]] && marks+=" $GIT_NEED_PUSH_SYMBOL${BASH_REMATCH[1]}"
+                [[ $line =~ behind\ ([0-9]+) ]] && marks+=" $GIT_NEED_PULL_SYMBOL${BASH_REMATCH[1]}"
+            else # branch is modified if output contains more lines after the header line
+                marks=" $GIT_BRANCH_CHANGED_SYMBOL$marks"
+                break
+            fi
+        done < <($git_eng status --porcelain --branch)  # note the space between the two <
 
         # print the git branch segment without a trailing newline
         printf " $GIT_BRANCH_SYMBOL$branch$marks "
