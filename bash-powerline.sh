@@ -182,7 +182,7 @@ __powerline() {
         fi
         PS1+="$BG_EXIT$FG_BASE3 $PS_SYMBOL $RESET "
     }
-
+    PROMPT_DIRTRIM=2
     PROMPT_COMMAND="ps1${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
 }
 
