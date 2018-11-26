@@ -149,6 +149,15 @@ __powerline() {
       fi
     }
 
+    __jobs() {
+        local jobsnum="$(jobs | wc -l)"
+        if [ "$jobsnum" -eq "0" ]; then
+            return
+        else
+            printf " $jobsnum "
+        fi
+    }
+
     ps1() {
         # Check the exit code of the previous command and display different
         # colors in the prompt accordingly. 
@@ -168,6 +177,14 @@ __powerline() {
             PS1+="$BG_VIOLET$FG_BASE3$(__virtualenv)$RESET"
         fi
         PS1+="$BG_BASE1$FG_BASE3 \w $RESET"
+
+        if shopt -q promptvars; then
+            __powerline_jobs="$(__jobs)"
+            PS1+="$BG_MAGENTA$FG_BASE3${__powerline_jobs}$RESET"
+        else
+            PS1+="$BG_MAGENTA$FG_BASE3$(__jobs)$RESET"
+        fi
+
         # Bash by default expands the content of PS1 unless promptvars is disabled.
         # We must use another layer of reference to prevent expanding any user
         # provided strings, which would cause security issues.
@@ -182,6 +199,7 @@ __powerline() {
         fi
         PS1+="$BG_EXIT$FG_BASE3 $PS_SYMBOL $RESET "
     }
+
     PROMPT_DIRTRIM=2
     PROMPT_COMMAND="ps1${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
 }
