@@ -10,11 +10,15 @@ Powerline for Bash in pure Bash script.
 * Git: show "*" symbol with uncommited modifications.
 * Git: show "↑" symbol and number of commits ahead of remote.
 * Git: show "↓" symbol and number of commits behind remote.
-* Python: display "ƨ" symbol when in a virtual environment
 * Platform-dependent prompt symbols.
 * Color-coded prompt symbol according to previous command execution status.
 * Use Bash builtin when possible to reduce delay. Delay sucks!
 * No need for patched fonts.
+
+This fork adds the following:
+* Python: display "ƨ" symbol when in a virtual environment
+* Show number of currently running jobs
+* Keeps the old full-colored background
 
 ## Installation
 
