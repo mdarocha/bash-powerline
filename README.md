@@ -18,6 +18,7 @@ Powerline for Bash in pure Bash script.
 This fork adds the following:
 * Python: display "ƨ" symbol when in a virtual environment
 * Show number of currently running jobs
+* Enables directory trimming
 * Keeps the old full-colored background
 
 ## Installation
